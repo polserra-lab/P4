@@ -111,7 +111,9 @@ namespace upc
 		unsigned int n;
 
 		for (n=0; n<data.nrow(); ++n) {
-			/// \TODO Compute the logprob of a single frame of the input data; you can use gmm_logprob() above.
+			/// \TODO --> DONE
+			// Compute the logprob of a single frame of the input data; you can use gmm_logprob() above.
+			lprob=lprob+gmm_logprob(data[n]);
 		}
 		return lprob/data.nrow();
 	}
@@ -206,13 +208,19 @@ namespace upc
 
 		fmatrix weights(data.nrow(), nmix);
 		for (iteration=0; iteration<max_it; ++iteration) {
-			/// \TODO
+			/// \TODO --> DONE
+			//FALTA DECIDIR DONDE MAX_IT
 			// Complete the loop in order to perform EM, and implement the stopping criterion.
 			//
 			// EM loop: em_expectation + em_maximization.
 			//
 			// Update old_prob, new_prob and inc_prob in order to stop the loop if logprob does not
 			// increase more than inc_threshold.
+
+			new_prob=em_expectation(data,weights);
+			em_maximization(data,weights);
+			
+
 			if (verbose & 01)
 				cout << "GMM nmix=" << nmix << "\tite=" << iteration << "\tlog(prob)=" << new_prob << "\tinc=" << inc_prob << endl;
 		}

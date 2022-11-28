@@ -12,7 +12,7 @@ set -o pipefail
 base=/tmp/$(basename $0).$$ 
 
 # Ensure cleanup of temporary files on exit
-trap cleanup EXIT
+trap cleanup EXIT #atrapa la interrupcion exit y ejecuta clean up para borrar los archivos temp 
 cleanup() {
    \rm -f $base.*
 }
@@ -26,7 +26,7 @@ lpc_order=$1
 inputfile=$2
 outputfile=$3
 
-UBUNTU_SPTK=1
+#UBUNTU_SPTK=0
 if [[ $UBUNTU_SPTK == 1 ]]; then
    # In case you install SPTK using debian package (apt-get)
    X2X="sptk x2x"
