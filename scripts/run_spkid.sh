@@ -73,7 +73,7 @@ fi
 # ----------------------------
 
 ## @file
-# \TODO
+# \TODO --> DONE
 # Create your own features with the name compute_$FEAT(), where $FEAT is the name of the feature.
 # - Select (or change) different features, options, etc. Make you best choice and try several options.
 
@@ -88,26 +88,21 @@ compute_lp() {
 }
 
 compute_mfcc(){
-    ## FALTA
-    dir_db=$1
+    db=$1
     shift
-    listas=$*
-    echo $listas
 
-    for filename in $(sort $listas); do
+    for filename in $(sort $*); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
-        EXEC="wav2mfcc 13 $dir_db/$filename.wav $w/$FEAT/$filename.$FEAT"
+        EXEC="wav2mfcc 13 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
     done
 }
 
 compute_lpcc() {
-    dir_db=$1
+    db=$1
     shift
-    listas=$*
-    echo $listas
 
-    for filename in $(sort $listas); do
+    for filename in $(sort $*); do
         mkdir -p `dirname $w/$FEAT/$filename.$FEAT`
         EXEC="wav2lpcc 25 25 $db/$filename.wav $w/$FEAT/$filename.$FEAT"
         echo $EXEC && $EXEC || exit 1
@@ -136,7 +131,7 @@ for cmd in $*; do
 
    if [[ $cmd == train ]]; then
        ## @file
-       # \TODO
+       # \TODO 
        # Select (or change) good parameters for gmm_train
        for dir in $db_devel/BLOCK*/SES* ; do
            name=${dir/*\/}
@@ -163,7 +158,7 @@ for cmd in $*; do
 
    elif [[ $cmd == trainworld ]]; then
        ## @file
-       # \TODO
+       # \TODO --> DONE
        # Implement 'trainworld' in order to get a Universal Background Model for speaker verification
        #
        # - The name of the world model will be used by gmm_verify in the 'verify' command below.
@@ -173,25 +168,25 @@ for cmd in $*; do
 
    elif [[ $cmd == verify ]]; then
        ## @file
-       # \TODO 
+       # \TODO --> DONE
        # Implement 'verify' in order to perform speaker verification
        #
        # - The standard output of gmm_verify must be redirected to file $LOG_VERIF.
        #   For instance:
        #   * <code> gmm_verify ... > $LOG_VERIF </code>
        #   * <code> gmm_verify ... | tee $LOG_VERIF </code>
-       EXEC="gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm -w $world $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates"
-        echo $EXEC && $EXEC | tee $LOG_VERIFY || exit 1
+         EXEC="gmm_verify -d $w/$FEAT -e $FEAT -D $w/gmm/$FEAT -E gmm $lists/gmm.list $lists/verif/all.test $lists/verif/all.test.candidates"
+        echo $EXEC && $EXEC | tee $TEMP_VERIF || exit 1
        
 
    elif [[ $cmd == verifyerr ]]; then
-       if [[ ! -s $LOG_VERIF ]] ; then
-          echo "ERROR: $LOG_VERIF not created"
+       if [[ ! -s $TEMP_VERIF ]] ; then
+          echo "ERROR: $TEMP_VERIF not created"
           exit 1
        fi
        # You can pass the threshold to spk_verif_score.pl or it computes the
        # best one for these particular results.
-       spk_verif_score $LOG_VERIF | tee $LOG_VERIF
+       spk_verif_score $TEMP_VERIF | tee -a $LOG_VERIF
 
    elif [[ $cmd == finalclass ]]; then
        ## @file
