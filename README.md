@@ -51,8 +51,47 @@ ejercicios indicados.
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
-  + ¿Cuál de ellas le parece que contiene más información?
+    
+    Primero de todos debemos obtener ficheros txt con las tres parametrizaciones:
+    ```zsh
+      fmatrix_show work/lp/BLOCK01/SES017/*.lp | egrep '^\[' | cut -f4,5 > lpC2_3.txt
 
+      fmatrix_show work/lpcc/BLOCK01/SES017/*.lpcc | egrep '^\[' | cut -f4,5 > lpccC2_3.txt
+
+      fmatrix_show work/mfcc/BLOCK01/SES017/*.mfcc | egrep '^\[' | cut -f4,5 > mfccC2_3.txt
+    ````
+    Y luego con el siguiente script de python generamos las tres gráficas:
+
+    ```python
+      import numpy as np
+      import matplotlib.pyplot as plt
+      import os
+
+      PATH = os.path.join(os.getcwd(), "Archivos")
+
+      plt.figure(figsize=(30, 18), dpi=80)
+      i = 311
+
+      for file in sorted(os.listdir(PATH)):                                        
+        if file.endswith(".txt"):
+          plt.subplot(i)
+          file_dir = os.path.join(PATH, file)
+          data = np.loadtxt(file_dir)
+          plt.scatter(data[:,0], data[:,1], s=0.5, color = 'red')
+          plt.xlabel(file[:-8])
+          plt.grid()
+          i += 1
+
+      plt.savefig("grafica.png") 
+      plt.show()
+    ```
+  + ¿Cuál de ellas le parece que contiene más información?
+    ![](python/grafica.png)
+    Cuando hablamos de información nos referimos nos referimos a la incorrelación entre sus coeficientes.
+    Observando los coeficientes obtenidos por la parametrización LP, podemos ver como siguen una tendencia lineal, y con una dispersión menor que en las otras dos parametrizaciones.
+    En el caso de la parametrización LPCC ya no se aprecia esa distribución lineal que comentabamos del LP, y su distribución es más dispersa por lo que sus coeficientes estan más incorrelados, por consiguiente contiene más información.
+    Finalmente, podemos ver como la que contiene mayor dipsersión de todas es la MFCC, con lo que es la que contiene myor información.
+    
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
