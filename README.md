@@ -91,17 +91,19 @@ ejercicios indicados.
     Observando los coeficientes obtenidos por la parametrización LP, podemos ver como siguen una tendencia lineal, y con una dispersión menor que en las otras dos parametrizaciones.
     En el caso de la parametrización LPCC ya no se aprecia esa distribución lineal que comentabamos del LP, y su distribución es más dispersa por lo que sus coeficientes estan más incorrelados, por consiguiente contiene más información.
     Finalmente, podemos ver como la que contiene mayor dipsersión de todas es la MFCC, con lo que es la que contiene myor información.
-    
+
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
   |                        | LP   | LPCC | MFCC |
   |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  | &rho;<sub>x</sub>[2,3] |  -0.872284    |  0.150782    |  -0.187225    |
   
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
+    Podemos ver lo que comentabamos en el apartado anterior como la parametrización LP aporta poc información mientras que la que nos aporta más es la LPCC.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+  Según hemos estudiado en teoria, para os mfcc con un orden 30 seria más que suficiente, y pa los LPCC según la libreria SPTK con 25 coeficientes.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -109,6 +111,12 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
+  
+  Para la siguiente función de densidad hemos usado el locutor SES007, el comando introducido ha sido:
+  ```zsh
+    plot_gmm_feat -x1 -y2 -p 99,90,50,10 work/gmm/mfcc/SES008.gmm work/mfcc/BLOCK00/SES007/SA007S*
+  ```
+  ![](img/Figure_1.png)
 
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
