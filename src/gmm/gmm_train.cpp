@@ -51,7 +51,7 @@ int main(int argc, const char *argv[])
 
 	GMM gmm;
 
-	/// \TODO Initialize GMM from data; initially, you should implement random initialization.
+	/// \TODO --> DONE Initialize GMM from data; initially, you should implement random initialization.
 	///
 	/// Other alternatives are: vq, em_split... See the options of the program and place each
 	/// initicialization accordingly.
@@ -59,9 +59,11 @@ int main(int argc, const char *argv[])
 		case 0:
 			gmm.random_init(data,nmix);
 			break;
-		case 1:			
+		case 1:	
+			gmm.vq_lbg(data, nmix, init_iterations, init_threshold, verbose);		
 			break;
 		case 2:
+			gmm.em_split(data, nmix, init_iterations, init_threshold, verbose);
 			break;
 		default:
 			;

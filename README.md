@@ -121,6 +121,9 @@ Complete el código necesario para entrenar modelos GMM.
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+  
+  Ahora comparamos en la siguiente grafica el locutor SES007 con el SES002
+  ![](img/Figure_2.png)
 
 ### Reconocimiento del locutor.
 
@@ -128,6 +131,10 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
+
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | Tasa de error          |   10.7%    |   1,02%   |   0.89%   |
 
 ### Verificación del locutor.
 
@@ -137,6 +144,13 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+
+  |                        | LP   | LPCC | MFCC |
+  |------------------------|:----:|:----:|:----:|
+  | THR                    |   0.170334515967397   |   -0.411100167585494   |   -0.0417021399288124   |
+  | Missed                 |   80/250=0.3200   |   12/250=0.0480   |   16/250=0.0640   |
+  | False Alarm            |   21/1000=0.0210   |   2/1000=0.0020   |   8/1000=0.0080   |
+  | Cost Detection         |   50.9   |   6.6   |   13.6   |
  
 ### Test final
 
