@@ -70,6 +70,7 @@ ejercicios indicados.
   Como podemos ver primero pasamos los valores de `base.lp`de double a ASCII, seguidamente con el comando wc -l contamos el número de lineas de el archivo, par poder saber nrow y luego lo escribimos.
 
   * ¿Por qué es más conveniente el formato *fmatrix* que el SPTK?
+    
     Es conveniente usar este formato ya que asi podemos visualizar de forma clara los coeficientes de la señal, ya que en fmatrix cada fila corresponde a una trama de la señal.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
