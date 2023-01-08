@@ -32,17 +32,59 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
+  - `sox`: 
+    Este comando sirve para tratar y convertir el señal de entrada a otro formato. Los parametros que usamos son:
+      -t --> Formato en nuestro caso raw.
+      -e --> Tipo de encoding, nosotros usamos signed-integer.
+      -b --> Indica el tamaño en bits de cada muestra que nosotros determinamos en 16 bits/sample.
 
-- Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
-  salida de SPTK (líneas 45 a 51 del script `wav2lp.sh`).
+  - `$X2X`: 
+    Este comando forma parte de la libreria de SPTK y su función es convertir data de un formato a otro distinto. Nosotros lo usamos para convertir un short de 2 bytes a float de 4 bytes. Tal que:
+    ```zsh
+    $X2X +sf
+    ```
+  
+  - `$FRAME`:
+    También pertenece a SPTK. En este caso este comando nos divide la señal de entrada en tramas de duración l y periodo p. Con lo que nosotros usamos:
+    ```zsh
+    $FRAME -l 240 -p 80
+    ```
+  - `$WINDOW`:
+    Este comando multiplica elemento por elemento de la señal de entrada de duración l por una ventana determinada w, dando como resultado una trama de duración L. El comando usado ha sido:
+    ```zsh
+    $WINDOW -l 240 -L 240
+    ```
+  -`$LPC`:
+    Calcula los coeficientes LPC de orden indicado de las l muestras de señal. Finalente guardamos el resultado en `base.lp`.
+    ```zsh
+    $LPC -l 240 -m $lpc_order > $base.lp
+    ```
+
+- Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros desalida de SPTK (líneas 45 a 51 del script `wav2lp.sh`).
+
+  Tenemos en `base.lp` los coeficientes LPC de la señal. Ahora pretendemos tenerlo todo en un fichero de formato fmatrix en el que tengamos la información solicitada de la señal en forma matricial. Para ello debemos indicar el número de columnas, que será el número de coeficientes LPC + 1, ya que en la primera posición tenemos guardada la ganancia de predicción, y el número de filas, igual al número de tramas de la señal. 
+  ```zsh
+  ncol=$((lpc_order+1))  
+  nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`
+  ````
+  Como podemos ver primero pasamos los valores de `base.lp`de double a ASCII, seguidamente con el comando wc -l contamos el número de lineas de el archivo, par poder saber nrow y luego lo escribimos.
 
   * ¿Por qué es más conveniente el formato *fmatrix* que el SPTK?
+    Es conveniente usar este formato ya que asi podemos visualizar de forma clara los coeficientes de la señal, ya que en fmatrix cada fila corresponde a una trama de la señal.
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
+  ```zsh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lp
+  ```
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+  ```zsh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 |
+	$MFCC -l 240 -m $mfcc_order -w 1 -n 26 -s 8 > $base.mfcc
+  ```
 
 ### Extracción de características.
 
